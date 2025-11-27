@@ -23,17 +23,12 @@ class AuthService {
     private tokenKey = 'pms_access_token';
 
     async login(credentials: LoginCredentials): Promise<AuthResponse> {
-        const formData = new URLSearchParams();
-        formData.append('username', credentials.username);
-        formData.append('password', credentials.password);
-
+        // Use the Global Admin login endpoint
         const response = await axios.post<AuthResponse>(
-            `${API_URL}/auth/login`,
-            formData,
+            `${API_URL}/auth/login/global-admin`,
             {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                email: credentials.username,
+                password: credentials.password
             }
         );
 
