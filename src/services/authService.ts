@@ -23,9 +23,9 @@ class AuthService {
     private tokenKey = 'pms_access_token';
 
     async login(credentials: LoginCredentials): Promise<AuthResponse> {
-        // Use the Global Admin login endpoint
+        // Use the unified login endpoint
         const response = await axios.post<AuthResponse>(
-            `${API_URL}/auth/login/global-admin`,
+            `${API_URL}/auth/login`,
             {
                 email: credentials.username,
                 password: credentials.password

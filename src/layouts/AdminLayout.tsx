@@ -1,8 +1,27 @@
+import React from 'react'
 import { Outlet } from 'react-router-dom'
+const UserMenu = React.lazy(() => import('@/components/UserMenu'))
 
 function AdminLayout() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <div className="flex flex-col">
+        {/* Top bar */}
+        <header className="w-full bg-white shadow-sm">
+          <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="text-lg font-bold text-primary-600">PMS</div>
+              {/* User menu goes here */}
+            </div>
+            <div className="flex items-center">
+              {/* Lazy load user menu to avoid circular deps */}
+              <React.Suspense fallback={<div className="w-24 h-6 bg-gray-100 rounded" />}>
+                <UserMenu />
+              </React.Suspense>
+            </div>
+          </div>
+        </header>
+
       <div className="flex">
         {/* Sidebar - TODO: Extract to component */}
         <aside className="w-64 bg-white shadow-md min-h-screen">
@@ -16,8 +35,11 @@ function AdminLayout() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          <Outlet />
+          <div className="w-full max-w-screen-xl mx-auto">
+            <Outlet />
+          </div>
         </main>
+      </div>
       </div>
     </div>
   )

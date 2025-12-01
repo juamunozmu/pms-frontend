@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppSelector } from '@/hooks/useRedux';
+import { Eye, EyeOff } from 'lucide-react';
 
 import LogoImage from './asset/Logo.png'; 
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,13 +51,21 @@ function LoginPage() {
     }
   };
 
+  const handlePasswordMouseDown = () => {
+    setShowPassword(true);
+  };
+
+  const handlePasswordMouseUp = () => {
+    setShowPassword(false);
+  };
+
   return (
     // Asegurado el fondo con bg-gray-900 (el azul oscuro que deseas)
-    <div className="flex h-screen w-screen bg-gray-900">
+    <div className="flex h-screen w-screen bg-gray-900 flex-col md:flex-row">
       
       {/* Columna de la Izquierda: Formulario de Login */}
-      <div className="flex w-2/5 justify-end items-center p-12">
-        <div className="w-[440px] bg-white p-12 rounded-xl shadow-2xl border-2 border-yellow-400">
+      <div className="flex md:w-5/12 w-full justify-center md:justify-end items-center p-6 md:p-12">
+        <div className="w-full max-w-md md:max-w-lg bg-white p-8 md:p-12 rounded-xl shadow-2xl border-2 border-yellow-400">
           <h2 className="text-3xl font-semibold mb-8 text-gray-900">
             Iniciar sesión
           </h2>
@@ -71,9 +81,9 @@ function LoginPage() {
               <label className="block text-base font-medium text-gray-900 mb-1">
                 Usuario
               </label>
-              <input
-                type="text"
-               className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                <input
+                  type="text"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -85,14 +95,34 @@ function LoginPage() {
               <label className="block text-base font-medium text-gray-900 mb-1">
                 Contraseña
               </label>
-              <input
-                type="password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 pr-12"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onMouseDown={handlePasswordMouseDown}
+                  onMouseUp={handlePasswordMouseUp}
+                  onMouseLeave={handlePasswordMouseUp}
+                  onTouchStart={handlePasswordMouseDown}
+                  onTouchEnd={handlePasswordMouseUp}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
+                </button>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Mantén presionado el ícono para ver tu contraseña</p>
             </div>
 
             <button
@@ -130,7 +160,7 @@ function LoginPage() {
       </div>
 
       {/* Columna de la Derecha: Información de Seguridad y Logo */}
-      <div className="flex w-3/5 flex-col justify-center items-center text-white p-12">
+      <div className="flex md:w-7/12 w-full flex-col justify-center items-center text-white p-8 md:p-12">
         
         {/*
           SECCIÓN DEL LOGO: Ahora usa la variable importada y no tiene fondo gris.
@@ -139,7 +169,7 @@ function LoginPage() {
           <img
             src={LogoImage} // <--- AHORA USA LA VARIABLE IMPORTADA
             alt="Logo de la Empresa"
-            className="h-40 max-h-40 w-auto"
+            className="h-32 md:h-40 max-h-40 w-auto"
           />
         </div>
         
