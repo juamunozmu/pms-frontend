@@ -4,6 +4,11 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import AdminPricingConfig from '@/pages/admin/AdminPricingConfig.tsx';
 import ReportsExport from '@/pages/admin/ReportsExport.tsx';
 import EmployeesPage from '@/pages/admin/EmployeesPage';
+import VehiclesPage from '@/pages/admin/VehiclesPage';
+import WashesPage from '@/pages/admin/WashesPage';
+import SubscriptionsPage from '@/pages/admin/SubscriptionsPage';
+import AgreementsPage from '@/pages/admin/AgreementsPage';
+import ExpensesPage from '@/pages/admin/ExpensesPage';
 
 
 // Layouts
