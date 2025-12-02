@@ -644,17 +644,42 @@ const DashboardPage: React.FC<{ setPage: (page: PageName) => void }> = ({ setPag
     const totalExpense = expenses.reduce((sum, e) => sum + e.amount, 0);
     const netProfit = totalIncome - totalExpense;
 
+    // Estado para el modal de éxito
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+
     const handleCheckout = (id: string) => {
-        // Replaced window.confirm with a custom log/alert to adhere to instructions
-        if (true) { // Simulate confirmation being true
-            completeTransaction(id); 
-            console.log("Cobro exitoso. La factura está disponible en la sección 'Vales y Facturas'.");
-            alert("Cobro exitoso. La factura está disponible en la sección 'Vales y Facturas'.");
-        }
+        completeTransaction(id); 
+        setSuccessMessage("✅ Cobro exitoso. La factura está disponible en la sección 'Vales y Facturas'.");
+        setShowSuccessModal(true);
+        setTimeout(() => setShowSuccessModal(false), 3000);
     };
 
     return (
         <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 h-full overflow-y-auto">
+            {/* Modal de Éxito */}
+            {showSuccessModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-auto transform transition-all animate-in">
+                        <div className="text-center">
+                            <div className="mb-4 flex justify-center">
+                                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="w-8 h-8 text-green-600" />
+                                </div>
+                            </div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Cobro Exitoso!</h2>
+                            <p className="text-gray-600 text-sm mb-6">{successMessage}</p>
+                            <button 
+                                onClick={() => setShowSuccessModal(false)}
+                                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg hover:from-green-600 hover:to-green-700 transition-all"
+                            >
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">📊 Dashboard de Control</h1>
