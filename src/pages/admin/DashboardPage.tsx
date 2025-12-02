@@ -189,29 +189,29 @@ const Menu: React.FC<{currentPage: PageName, setPage: (page: PageName) => void}>
     ];
 
     return (
-        <nav className="bg-gradient-to-b from-gray-900 to-gray-800 text-white w-64 min-h-screen p-4 flex flex-col shadow-2xl">
-            <div className="text-xl font-bold mb-8 flex items-center text-yellow-400 border-b border-gray-700 pb-4">
-                <Wrench className="w-6 h-6 mr-2" /> PMS Simulación
+        <nav className="bg-gradient-to-b from-gray-900 to-gray-800 text-white w-56 h-screen p-3 flex flex-col shadow-2xl overflow-y-auto">
+            <div className="text-lg font-bold mb-6 flex items-center text-yellow-400 border-b border-gray-700 pb-3">
+                <Wrench className="w-5 h-5 mr-2" /> PMS Simulación
             </div>
-            <ul className="space-y-3 flex-grow">
+            <ul className="space-y-2 flex-grow">
                 {navItems.map(item => (
                     <li key={item.name}>
                         <button
                             onClick={() => setPage(item.page)}
-                            className={`w-full text-left p-3 rounded-lg flex items-center transition-all duration-200 ${
+                            className={`w-full text-left p-2.5 rounded-lg flex items-center transition-all duration-200 text-sm ${
                                 currentPage === item.page 
-                                    ? 'bg-yellow-500 text-gray-900 font-bold shadow-lg scale-105' 
+                                    ? 'bg-yellow-500 text-gray-900 font-bold shadow-lg' 
                                     : 'hover:bg-gray-700 text-gray-100 hover:text-white'
                             }`}
                         >
-                            <item.icon className="w-5 h-5 mr-3" /> {item.name}
+                            <item.icon className="w-4 h-4 mr-2" /> {item.name}
                         </button>
                     </li>
                 ))}
             </ul>
-            <div className="border-t border-gray-700 pt-4 mt-4">
-                <button onClick={logout} className="w-full text-left p-3 rounded-lg flex items-center text-red-400 hover:bg-red-500/20 transition-colors hover:text-red-300 font-semibold">
-                    <X className="w-5 h-5 mr-3" /> Cerrar Sesión
+            <div className="border-t border-gray-700 pt-3 mt-3">
+                <button onClick={logout} className="w-full text-left p-2.5 rounded-lg flex items-center text-red-400 hover:bg-red-500/20 transition-colors hover:text-red-300 font-semibold text-sm">
+                    <X className="w-4 h-4 mr-2" /> Cerrar Sesión
                 </button>
             </div>
         </nav>
@@ -654,97 +654,96 @@ const DashboardPage: React.FC<{ setPage: (page: PageName) => void }> = ({ setPag
     };
 
     return (
-        <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-            <div className="flex justify-between items-center mb-8">
+        <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 h-full overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 className="text-4xl font-bold text-gray-900">📊 Dashboard de Control</h1>
-                    <p className="text-gray-600 mt-1">Bienvenido al sistema de gestión de parqueo y lavado</p>
+                    <h1 className="text-3xl font-bold text-gray-900">📊 Dashboard de Control</h1>
+                    <p className="text-gray-600 text-sm mt-1">Bienvenido al sistema de gestión de parqueo y lavado</p>
                 </div>
-                <button onClick={() => setPage('checkin')} className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl hover:from-yellow-500 hover:to-yellow-600 transition-all duration-200 flex items-center transform hover:scale-105">
-                    <Car className="w-5 h-5 mr-2"/> + Nuevo Servicio
+                <button onClick={() => setPage('checkin')} className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-5 py-2 rounded-lg font-bold shadow-lg hover:shadow-xl hover:from-yellow-500 hover:to-yellow-600 transition-all duration-200 flex items-center transform hover:scale-105 text-sm">
+                    <Car className="w-5 h-5 mr-2"/> Nuevo Servicio
                 </button>
             </div>
 
             {/* Tarjetas de Estadísticas */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-lg border-2 border-green-300 hover:shadow-xl transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-gray-700 font-semibold text-sm">💰 Ingresos Totales</h3>
-                        <TrendingUp className="w-5 h-5 text-green-600" />
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-xl shadow-lg border-2 border-green-300 hover:shadow-xl transition-all">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-700 font-semibold text-xs">💰 Ingresos</h3>
+                        <TrendingUp className="w-4 h-4 text-green-600" />
                     </div>
-                    <p className="text-3xl font-bold text-green-700">${totalIncome.toLocaleString()}</p>
-                    <p className="text-xs text-green-600 mt-2">{transactions.filter(t => t.status === 'COMPLETED').length} completados</p>
+                    <p className="text-2xl font-bold text-green-700">${totalIncome.toLocaleString()}</p>
+                    <p className="text-xs text-green-600 mt-1">{transactions.filter(t => t.status === 'COMPLETED').length} completados</p>
                 </div>
                 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl shadow-lg border-2 border-red-300 hover:shadow-xl transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-gray-700 font-semibold text-sm">💸 Gastos Totales</h3>
-                        <TrendingDown className="w-5 h-5 text-red-600" />
+                <div className="bg-gradient-to-br from-red-50 to-red-100 p-5 rounded-xl shadow-lg border-2 border-red-300 hover:shadow-xl transition-all">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-700 font-semibold text-xs">💸 Gastos</h3>
+                        <TrendingDown className="w-4 h-4 text-red-600" />
                     </div>
-                    <p className="text-3xl font-bold text-red-700">${totalExpense.toLocaleString()}</p>
-                    <p className="text-xs text-red-600 mt-2">{expenses.length} registrados</p>
+                    <p className="text-2xl font-bold text-red-700">${totalExpense.toLocaleString()}</p>
+                    <p className="text-xs text-red-600 mt-1">{expenses.length} registrados</p>
                 </div>
                 
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg border-2 border-blue-300 hover:shadow-xl transition-all">
-                    <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-gray-700 font-semibold text-sm">🚗 Activos Ahora</h3>
-                        <Car className="w-5 h-5 text-blue-600" />
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl shadow-lg border-2 border-blue-300 hover:shadow-xl transition-all">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-700 font-semibold text-xs">🚗 Activos</h3>
+                        <Car className="w-4 h-4 text-blue-600" />
                     </div>
-                    <p className="text-3xl font-bold text-blue-700">{activeTxs.length}</p>
-                    <p className="text-xs text-blue-600 mt-2">pendientes de cobro</p>
+                    <p className="text-2xl font-bold text-blue-700">{activeTxs.length}</p>
+                    <p className="text-xs text-blue-600 mt-1">pendientes</p>
                 </div>
 
-                <div className={`bg-gradient-to-br ${netProfit >= 0 ? 'from-purple-50 to-purple-100 border-purple-300' : 'from-orange-50 to-orange-100 border-orange-300'} p-6 rounded-xl shadow-lg border-2 hover:shadow-xl transition-all`}>
-                    <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-gray-700 font-semibold text-sm">📈 Ganancia Neta</h3>
-                        <Zap className={`w-5 h-5 ${netProfit >= 0 ? 'text-purple-600' : 'text-orange-600'}`} />
+                <div className={`bg-gradient-to-br ${netProfit >= 0 ? 'from-purple-50 to-purple-100 border-purple-300' : 'from-orange-50 to-orange-100 border-orange-300'} p-5 rounded-xl shadow-lg border-2 hover:shadow-xl transition-all`}>
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-700 font-semibold text-xs">📈 Ganancia</h3>
+                        <Zap className={`w-4 h-4 ${netProfit >= 0 ? 'text-purple-600' : 'text-orange-600'}`} />
                     </div>
-                    <p className={`text-3xl font-bold ${netProfit >= 0 ? 'text-purple-700' : 'text-orange-700'}`}>${netProfit.toLocaleString()}</p>
-                    <p className={`text-xs mt-2 ${netProfit >= 0 ? 'text-purple-600' : 'text-orange-600'}`}>{netProfit >= 0 ? '✅ Positivo' : '⚠️ Negativo'}</p>
+                    <p className={`text-2xl font-bold ${netProfit >= 0 ? 'text-purple-700' : 'text-orange-700'}`}>${netProfit.toLocaleString()}</p>
+                    <p className={`text-xs mt-1 ${netProfit >= 0 ? 'text-purple-600' : 'text-orange-600'}`}>{netProfit >= 0 ? '✅ Positivo' : '⚠️ Negativo'}</p>
                 </div>
             </div>
 
             {/* Tabla de Servicios en Curso */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-yellow-400">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 flex items-center">🛠️ Servicios en Curso</h2>
-                    <span className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-semibold">{activeTxs.length} activos</span>
+            <div className="bg-white rounded-xl shadow-lg p-5 border-t-4 border-yellow-400 h-full overflow-y-auto">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-gray-900 flex items-center">🛠️ Servicios en Curso</h2>
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-semibold text-sm">{activeTxs.length}</span>
                 </div>
                 {activeTxs.length === 0 ? (
-                    <div className="text-center py-12">
-                        <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500 text-lg font-medium">No hay servicios activos en este momento</p>
-                        <p className="text-gray-400 text-sm mt-2">Los servicios aparecerán aquí cuando registres un nuevo check-in</p>
+                    <div className="text-center py-8">
+                        <Car className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                        <p className="text-gray-500 font-medium">No hay servicios activos</p>
+                        <p className="text-gray-400 text-xs mt-1">Los servicios aparecerán aquí al registrar check-in</p>
                     </div>
                 ) : (
-                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                    <div className="space-y-2">
                         {activeTxs.map((tx, index) => (
-                            <div key={tx.id} className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-yellow-400 hover:shadow-md transition-all group">
-                                <div className="flex items-center flex-grow">
-                                    <div className="bg-yellow-100 text-yellow-800 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-4">{index + 1}</div>
-                                    <div>
-                                        <span className="font-bold text-lg text-gray-900">{tx.plate}</span>
-                                        <span className="text-xs text-gray-500 ml-3">⏱️ {tx.services.length} servicio(s)</span>
-                                        <div className="mt-1 flex gap-2">
-                                            {tx.services.slice(0, 3).map((s, i) => (
-                                                <span key={i} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">
+                            <div key={tx.id} className="flex justify-between items-center p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-yellow-400 hover:shadow-md transition-all group">
+                                <div className="flex items-center flex-grow min-w-0">
+                                    <div className="bg-yellow-100 text-yellow-800 rounded-full w-7 h-7 flex items-center justify-center font-bold text-xs mr-3 flex-shrink-0">{index + 1}</div>
+                                    <div className="min-w-0">
+                                        <span className="font-bold text-gray-900 text-sm">{tx.plate}</span>
+                                        <span className="text-xs text-gray-500 ml-2">⏱️ {tx.services.length} srv</span>
+                                        <div className="mt-1 flex gap-1 flex-wrap">
+                                            {tx.services.slice(0, 2).map((s, i) => (
+                                                <span key={i} className="text-xs bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded truncate">
                                                     {s.name.split(' ')[0]}
                                                 </span>
                                             ))}
-                                            {tx.services.length > 3 && <span className="text-xs text-gray-500">+{tx.services.length - 3}</span>}
+                                            {tx.services.length > 2 && <span className="text-xs text-gray-500">+{tx.services.length - 2}</span>}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-3 ml-2 flex-shrink-0">
                                     <div className="text-right">
-                                        <span className="font-bold text-green-600 text-xl">${tx.totalAmount.toLocaleString()}</span>
-                                        <p className="text-xs text-gray-500">Total</p>
+                                        <span className="font-bold text-green-600 text-sm">${tx.totalAmount.toLocaleString()}</span>
                                     </div>
                                     <button 
                                         onClick={() => handleCheckout(tx.id)} 
-                                        className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:shadow-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 flex items-center whitespace-nowrap"
+                                        className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-lg text-xs font-bold hover:shadow-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 flex items-center whitespace-nowrap"
                                     >
-                                        <DollarSign className="w-4 h-4 mr-1"/> Cobrar
+                                        <DollarSign className="w-3 h-3 mr-1"/> Cobrar
                                     </button>
                                 </div>
                             </div>
@@ -769,9 +768,9 @@ const AppRouter: React.FC = () => {
     if (!isLoggedIn) return <LoginPage />;
 
     return (
-        <div className="flex bg-gray-100 min-h-screen w-full">
+        <div className="flex bg-gray-100 h-screen w-full overflow-hidden">
             <Menu currentPage={currentPage} setPage={setCurrentPage} />
-            <main className="flex-1 overflow-y-auto max-h-screen bg-gray-100">
+            <main className="flex-1 overflow-y-auto overflow-x-hidden h-screen bg-gray-100">
                 {currentPage === 'dashboard' && <DashboardPage setPage={setCurrentPage} />}
                 {currentPage === 'checkin' && <CheckinPage />}
                 {currentPage === 'expenses' && <ExpensePage />}
