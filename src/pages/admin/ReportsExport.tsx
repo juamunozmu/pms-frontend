@@ -1,16 +1,315 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FileText, Download, Calendar, FileSpreadsheet, File, Loader, FileType } from 'lucide-react';
+import { reportService } from '@/services/reportService';
+
+type ReportType = 'income_expenses' | 'washing' | 'parking' | 'payroll' | 'comprehensive';
+type ExportFormat = 'excel' | 'pdf' | 'csv';
+
+interface ReportOption {
+    id: ReportType;
+    name: string;
+    description: string;
+    icon: React.ReactNode;
+}
 
 const ReportsExport: React.FC = () => {
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [selectedReport, setSelectedReport] = useState<ReportType>('parking');
+    const [exportFormat, setExportFormat] = useState<ExportFormat>('excel');
+    const [loading, setLoading] = useState(false);
+
+    const reportOptions: ReportOption[] = [
+        {
+            id: 'parking',
+            name: 'Registro de Parqueadero',
+            description: 'Historial de vehículos en parqueadero (Disponible)',
+            icon: <FileText className="w-6 h-6 text-yellow-600" />
+        },
+        {
+            id: 'comprehensive',
+            name: 'Reporte Completo',
+            description: 'Incluye ingresos, gastos, servicios de lavado y parqueadero',
+            icon: <FileText className="w-6 h-6 text-purple-600" />
+        },
+        {
+            id: 'income_expenses',
+            name: 'Ingresos y Gastos',
+            description: 'Detalle de ingresos y gastos del período',
+            icon: <FileText className="w-6 h-6 text-green-600" />
+        },
+        {
+            id: 'washing',
+            name: 'Servicios de Lavado',
+            description: 'Registro de todos los servicios de lavado realizados',
+            icon: <FileText className="w-6 h-6 text-blue-600" />
+        },
+        {
+            id: 'payroll',
+            name: 'Nómina de Lavadores',
+            description: 'Comisiones, vales y pagos a lavadores',
+            icon: <FileText className="w-6 h-6 text-red-600" />
+        }
+    ];
+
+    const handleExport = async () => {
+        if (!startDate || !endDate) {
+            alert('Por favor selecciona un rango de fechas válido');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            if (selectedReport === 'parking') {
+                await reportService.exportParkingHistory(startDate, endDate, exportFormat);
+            } else {
+                // Placeholder for other reports not yet implemented in backend
+                alert('Este reporte estará disponible próximamente. Por ahora prueba el "Registro de Parqueadero".');
+            }
+        } catch (error) {
+            console.error('Error exporting report:', error);
+            alert('Error al generar el reporte. Por favor intente nuevamente.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-extrabold text-gray-900 mb-6 border-b-4 border-yellow-500 pb-1 inline-block">
-                Exportar Reportes
-            </h1>
-
-            <div className="bg-white p-6 rounded-xl shadow-lg">
+            {/* Header */}
+            <div className="mb-8">
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                    Exportar Reportes
+                </h1>
                 <p className="text-gray-600">
-                    Exportación de reportes lista para implementación.
+                    Genera y descarga reportes detallados del sistema
                 </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Left Panel - Configuration */}
+                <div className="lg:col-span-2 space-y-6">
+                    {/* Date Range Section */}
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Calendar className="w-5 h-5 text-gray-600" />
+                            <h2 className="text-xl font-bold text-gray-900">Rango de Fechas</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Fecha Inicio
+                                </label>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Fecha Fin
+                                </label>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Quick Date Presets */}
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            <button
+                                onClick={() => {
+                                    const today = new Date().toISOString().split('T')[0];
+                                    setStartDate(today);
+                                    setEndDate(today);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                            >
+                                Hoy
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const today = new Date();
+                                    const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                                    setStartDate(lastWeek.toISOString().split('T')[0]);
+                                    setEndDate(today.toISOString().split('T')[0]);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                            >
+                                Última Semana
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const today = new Date();
+                                    const lastMonth = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                                    setStartDate(lastMonth.toISOString().split('T')[0]);
+                                    setEndDate(today.toISOString().split('T')[0]);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                            >
+                                Último Mes
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Report Type Selection */}
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <h2 className="text-xl font-bold text-gray-900 mb-4">Tipo de Reporte</h2>
+                        <div className="space-y-3">
+                            {reportOptions.map((report) => (
+                                <div
+                                    key={report.id}
+                                    onClick={() => setSelectedReport(report.id)}
+                                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedReport === report.id
+                                        ? 'border-yellow-400 bg-yellow-50'
+                                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                                        }`}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className={`p-2 rounded-lg ${selectedReport === report.id ? 'bg-white' : 'bg-gray-50'
+                                            }`}>
+                                            {report.icon}
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="font-semibold text-gray-900 mb-1">
+                                                {report.name}
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                {report.description}
+                                            </p>
+                                        </div>
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedReport === report.id
+                                            ? 'border-yellow-500 bg-yellow-500'
+                                            : 'border-gray-300'
+                                            }`}>
+                                            {selectedReport === report.id && (
+                                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Panel - Export Options */}
+                <div className="space-y-6">
+                    {/* Format Selection */}
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <h2 className="text-xl font-bold text-gray-900 mb-4">Formato de Exportación</h2>
+                        <div className="space-y-3">
+                            <div
+                                onClick={() => setExportFormat('excel')}
+                                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${exportFormat === 'excel'
+                                    ? 'border-green-500 bg-green-50'
+                                    : 'border-gray-200 hover:border-gray-300'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FileSpreadsheet className={`w-6 h-6 ${exportFormat === 'excel' ? 'text-green-600' : 'text-gray-600'
+                                        }`} />
+                                    <div className="flex-1">
+                                        <div className="font-semibold text-gray-900">Excel</div>
+                                        <div className="text-xs text-gray-600">.xlsx</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                onClick={() => setExportFormat('pdf')}
+                                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${exportFormat === 'pdf'
+                                    ? 'border-red-500 bg-red-50'
+                                    : 'border-gray-200 hover:border-gray-300'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <File className={`w-6 h-6 ${exportFormat === 'pdf' ? 'text-red-600' : 'text-gray-600'
+                                        }`} />
+                                    <div className="flex-1">
+                                        <div className="font-semibold text-gray-900">PDF</div>
+                                        <div className="text-xs text-gray-600">.pdf</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                onClick={() => setExportFormat('csv')}
+                                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${exportFormat === 'csv'
+                                    ? 'border-blue-500 bg-blue-50'
+                                    : 'border-gray-200 hover:border-gray-300'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FileType className={`w-6 h-6 ${exportFormat === 'csv' ? 'text-blue-600' : 'text-gray-600'
+                                        }`} />
+                                    <div className="flex-1">
+                                        <div className="font-semibold text-gray-900">CSV</div>
+                                        <div className="text-xs text-gray-600">.csv</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Export Summary */}
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <h2 className="text-xl font-bold text-gray-900 mb-4">Resumen</h2>
+                        <div className="space-y-3 text-sm">
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Tipo de Reporte:</span>
+                                <span className="font-semibold text-gray-900">
+                                    {reportOptions.find(r => r.id === selectedReport)?.name}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Formato:</span>
+                                <span className="font-semibold text-gray-900 uppercase">
+                                    {exportFormat}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Desde:</span>
+                                <span className="font-semibold text-gray-900">
+                                    {startDate || 'No seleccionada'}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-600">Hasta:</span>
+                                <span className="font-semibold text-gray-900">
+                                    {endDate || 'No seleccionada'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={handleExport}
+                            disabled={!startDate || !endDate || loading}
+                            className={`w-full mt-6 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${!startDate || !endDate || loading
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-yellow-400 hover:bg-yellow-500 text-gray-900'
+                                }`}
+                        >
+                            {loading ? (
+                                <Loader className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <Download className="w-5 h-5" />
+                            )}
+                            {loading ? 'Generando...' : 'Exportar Reporte'}
+                        </button>
+                    </div>
+
+                    {/* Info Notice */}
+                    <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <p className="text-sm text-blue-800">
+                            <strong>Nota:</strong> Los reportes son generados en tiempo real con los datos
+                            más actualizados del sistema.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -4,6 +4,11 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import AdminPricingConfig from '@/pages/admin/AdminPricingConfig.tsx';
 import ReportsExport from '@/pages/admin/ReportsExport.tsx';
 import EmployeesPage from '@/pages/admin/EmployeesPage';
+import VehiclesPage from '@/pages/admin/VehiclesPage';
+import WashesPage from '@/pages/admin/WashesPage';
+import SubscriptionsPage from '@/pages/admin/SubscriptionsPage';
+import AgreementsPage from '@/pages/admin/AgreementsPage';
+import ExpensesPage from '@/pages/admin/ExpensesPage';
 
 
 // Layouts
@@ -80,10 +85,21 @@ function Router() {
         {/* Dashboard Principal del Administrador */}
         <Route path="dashboard" element={<AdminDashboard />} />
 
+        {/* VEHÍCULOS */}
+        <Route path="vehicles" element={<VehiclesPage />} />
+        {/* LAVADOS */}
+        <Route path="washes" element={<WashesPage />} />
+        {/* MENSUALIDADES */}
+        <Route path="subscriptions" element={<SubscriptionsPage />} />
+        {/* CONVENIOS */}
+        <Route path="agreements" element={<AgreementsPage />} />
+        {/* GASTOS */}
+        <Route path="expenses" element={<ExpensesPage />} />
         {/* CONFIGURACIÓN DE TARIFAS  */}
         <Route path="pricing" element={<AdminPricingConfig />} />
         {/* export el report  */}
         <Route path="export/report" element={<ReportsExport />} />
+        <Route path="reports" element={<ReportsExport />} />
         {/* Empleados/Usuarios */}
         <Route path="employees" element={<EmployeesPage />} />
 
